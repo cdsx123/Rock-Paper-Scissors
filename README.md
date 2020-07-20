@@ -1,0 +1,1 @@
+Just a basic, best out of 5, game of Rock Paper Scissors made using javascript
