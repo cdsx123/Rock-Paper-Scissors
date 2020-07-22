@@ -1,11 +1,37 @@
-let playerScore;
-let computerScore;
+let playerScore = 0;
+let computerScore = 0;
 let playerSelection;
 let computerSelection;
+let text;
 
+const container = document.querySelector('#container');
+const scissors = document.querySelector('#scissors');
+const rock = document.querySelector('#rock');
+const paper = document.querySelector('#paper');
+const final = document.createElement('h3')
+const winLose = document.createElement('h2');
+const round = document.createElement('h4')
+
+container.insertBefore(round, scissors);
+container.insertBefore(winLose, round)
+container.appendChild(final, round)
+
+scissors.addEventListener('click', function (){ game('scissors');});
+rock.addEventListener('click', function () { game('rock');});
+paper.addEventListener('click', function () { game('paper');});
+
+final.addClassList('final');
+container.addClassList('container');
+round.addClassList('round');
+winLose.addClassList('winLose');
+scissors.addClassList('btn');
+paper.addClassList('btn');
+rock.addClassList('btn');
+
+//Computer chooses rock paper or scissors
 function computerPlay() {
     let choice = Math.floor(Math.random()*3+1);
-    ;
+    
     switch (choice){
         case 1:
             return 'scissors';
@@ -21,8 +47,8 @@ function computerPlay() {
             break;
     };
 }
-
-function playRound(){
+//checks whether the player won or lost, or if there was a tie
+function playRound(playerSelection){
     
     if (playerSelection === 'rock' && computerSelection === 'scissors'){
         outcome ='win';
@@ -48,9 +74,10 @@ function playRound(){
     else{
         return "Error, you must enter either rock, paper, or scissors.";
     };
-
+    
     return outcome
 }
+//return's a statement depending on the outcome of the round
 function winOrLose(){
     if (outcome === 'win'){
         
@@ -64,32 +91,38 @@ function winOrLose(){
         return `It was a tie! You both chose ${computerSelection}`
     };
 }
-
-function game(){
-    playerScore = 0;
-    computerScore = 0;
-    while(+playerScore !== 3 && +computerScore !== 3){
+//plays the game
+function game(choice){
     
-    playerSelection = prompt('Choose one of rock/paper/scissors.');
-    playerSelection = playerSelection.toLowerCase();
-    computerSelection = computerPlay();
-    playRound()
-    console.log(winOrLose());
-    if (outcome === 'win'){
-        playerScore++;
-    }
-    else if (outcome ==='lose'){
-        computerScore++;
-    };
-    console.log(playerScore);
+    //loops until someone has 5 points
+    if(+playerScore !== 5 && +computerScore !== 5){
+        playerSelection = choice;
+        computerSelection = computerPlay();
+        playRound(choice);
+        
+        round.textContent = winOrLose();
+        //increments either the playerScore or the computerScore depending on who won
+        if (outcome === 'win'){
+            playerScore++;
+        }
+        else if (outcome ==='lose'){
+            computerScore++;
+        };
+        
     
     }
-    if (playerScore > computerScore){
-        console.log('Congratulations! You win!')
+    //player won
+    if (playerScore === 5){
+        winLose.textContent = 'Congratulations! You win!'
     }
-    else{
-        console.log('Oh no, you lost.')
+    //player lost
+    else if (computerScore === 5){
+        winLose.textContent = 'Oh no, you lost.'
     }
-    console.log(`The final score was ${playerScore} to ${computerScore}`)
+    //prints the final score
+    if (playerScore === 5 || computerScore === 5){
+        final.textContent = `The final score was ${playerScore} to ${computerScore}`
+    }
+    
 }
-game()
+
